@@ -1,0 +1,17 @@
+# Java
+target/
+*.class
+*.jar
+
+# Node/React
+medora-frontend/node_modules/
+medora-frontend/dist/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+
+# IDE
+.idea/
