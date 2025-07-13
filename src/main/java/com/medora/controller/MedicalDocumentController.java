@@ -7,6 +7,8 @@ import com.medora.model.User;
 import com.medora.security.CurrentUser;
 import com.medora.security.UserPrincipal;
 import com.medora.service.MedicalDocumentService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,19 +48,30 @@ public class MedicalDocumentController {
         MedicalDocument doc = documentService.uploadDocument(user, file, date, tags);
         return ResponseEntity.ok(doc);
     }
-
     @GetMapping("/{id}/download")
-    public ResponseEntity<byte[]> downloadDocument(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) throws IOException {
+    public ResponseEntity<byte[]> downloadDocument(
+            @PathVariable Long id,
+            @CurrentUser UserPrincipal userPrincipal) throws IOException {
+
         User user = userPrincipal.getUser();
         MedicalDocument doc = documentService.getDocumentForUser(id, user)
                 .orElseThrow(() -> new RuntimeException("Not found"));
 
-        byte[] content = Files.readAllBytes(new File(doc.getFilePath()).toPath());
+        File file = new File(doc.getFilePath());
+        byte[] content = Files.readAllBytes(file.toPath());
+
+        String mimeType = Files.probeContentType(file.toPath());
+        if (mimeType == null) {
+            mimeType = "application/pdf"; // force fallback if detection fails
+        }
 
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=\"" + doc.getFileName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + doc.getFileName() + "\"")
+                .contentType(MediaType.parseMediaType(mimeType))
                 .body(content);
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDocument(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {

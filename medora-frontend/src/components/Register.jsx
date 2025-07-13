@@ -49,9 +49,9 @@ export default function Register() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1 }}
-        className="text-6xl font-extrabold mb-12 text-center tracking-widest text-green-400"
+        className="text-4xl font-extrabold mb-3 text-center tracking-widest text-green-400"
       >
-        <h1 className="text-7xl md:text-8xl font-extrabold text-blue mb-12">
+        <h1 className="text-7xl md:text-8xl font-extrabold text-blue mb-2">
           Medora
         </h1>
       </motion.h1>
@@ -59,7 +59,7 @@ export default function Register() {
       {/* Register Card */}
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 p-8 rounded-2xl shadow-lg w-96 flex flex-col gap-6"
+        className="bg-gradient-to-br from-gray-900 via-purple-900 to-violet-600 p-8 rounded-2xl shadow-lg w-96 flex flex-col gap-6"
       >
         <h2 className="text-2xl font-semibold text-center text-white">Register</h2>
 
@@ -69,7 +69,10 @@ export default function Register() {
           placeholder="Username"
           value={form.username}
           onChange={handleChange}
-          className="p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="p-3 rounded-lg bg-white/10 text-white placeholder-white/60 
+          focus:outline-none focus:ring-2 focus:ring-violet-400 
+          backdrop-blur-sm transition duration-200
+          "
         />
 
         <input
@@ -78,7 +81,9 @@ export default function Register() {
           placeholder="Email"
           value={form.email}
           onChange={handleChange}
-          className="p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="p-3 rounded-lg bg-white/10 text-white placeholder-white/60 
+            focus:outline-none focus:ring-2 focus:ring-violet-400 
+            backdrop-blur-sm transition duration-200"
         />
 
         <input
@@ -87,8 +92,11 @@ export default function Register() {
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          className="p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-400"
-        />
+          className="p-3 rounded-lg bg-white/10 text-white placeholder-white/60 
+          focus:outline-none focus:ring-2 focus:ring-violet-400 
+          backdrop-blur-sm transition duration-200
+          "
+          />
 
         <input
           type="password"
@@ -96,7 +104,10 @@ export default function Register() {
           placeholder="Confirm Password"
           value={form.confirmPassword}
           onChange={handleChange}
-          className="p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="p-3 rounded-lg bg-white/10 text-white placeholder-white/60 
+          focus:outline-none focus:ring-2 focus:ring-violet-400 
+          backdrop-blur-sm transition duration-200
+          "
         />
 
         {error && <p className="text-red-400 text-center">{error}</p>}
@@ -109,7 +120,7 @@ export default function Register() {
         </button>
       </form>
 
-      <p className="text-center text-bold mt-2 text-white">
+      <p className="text-center text-bold mt-1 text-white">
         Already have an account?{" "}
         <a href="/" className="text-blue-600 hover:underline">
           Login

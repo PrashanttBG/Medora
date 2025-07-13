@@ -42,7 +42,7 @@ export const analyzeReport = async (file) => {
   formData.append('file', file);
   formData.append('username', username);
 
-  const response = await axios.post(`${BASE_URL}/report/upload`, formData, {
+  const response = await axios.post(`${BASE_URL}/report/analyze`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data',
@@ -59,7 +59,7 @@ export const analyzeImageReport = async (file) => {
   formData.append('file', file);
   formData.append('username', username);
 
-  const response = await axios.post(`${BASE_URL}/report/image-upload`, formData, {
+  const response = await axios.post(`${BASE_URL}/report/image-analyze`, formData, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'multipart/form-data',
@@ -70,3 +70,38 @@ export const analyzeImageReport = async (file) => {
 };
 
 
+export const analyzePrescription = async (file) => {
+  const token = localStorage.getItem('token');
+  const username = localStorage.getItem('username'); // Make sure this is stored after login
+  console.log('File: ', file);
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('username', username);
+
+  const response = await axios.post(`${BASE_URL}/prescription/analyze`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response.data;
+};
+
+
+export const analyzeImagePrescription = async (file) => {
+  const token = localStorage.getItem('token');
+  const username = localStorage.getItem('username');
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('username', username);
+
+  const response = await axios.post(`${BASE_URL}/prescription/image-analyze`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response.data;
+};

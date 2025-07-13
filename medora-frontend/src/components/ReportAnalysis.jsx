@@ -102,8 +102,14 @@ export default function Reportsummary() {
   
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 to-pink-100 flex flex-col items-center justify-start p-8">
-      <h1 className="text-4xl font-bold mb-6 text-purple-700 animate-bounce">Report summary</h1>
+    <div className="min-h-screen bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 flex flex-col items-center justify-start p-8">
+      <motion.h1 className="text-4xl font-bold mb-6 text-purple-700 animate-pulse"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8 }}
+      >
+        Report Analysis
+      </motion.h1>
 
       <div
         onDragOver={(e) => {
@@ -121,7 +127,7 @@ export default function Reportsummary() {
             <p className="text-center text-gray-600 mb-4">
               Drag and drop your PDF or image file here
             </p>
-            <label className="bg-purple-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-purple-600 transition">
+            <label className="bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 hover:from-pink-500 hover:via-purple-500 hover:to-indigo-500 text-white px-4 py-2 rounded-xl transition duration-300 shadow-md cursor-pointer">
               Browse File
               <input
                 type="file"
@@ -163,7 +169,7 @@ export default function Reportsummary() {
       <button
         onClick={handleAnalyze}
         disabled={!file || loading}
-        className="bg-purple-500 text-white px-6 py-3 rounded-xl hover:bg-purple-600 transition cursor-pointer"
+        className="bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 hover:from-pink-500 hover:via-purple-500 hover:to-indigo-500 text-white px-6 py-3 rounded-xl transition duration-300 shadow-md cursor-pointer"
       >
         {loading ? 'Analyzing...' : 'Analyze Report'}
       </button>

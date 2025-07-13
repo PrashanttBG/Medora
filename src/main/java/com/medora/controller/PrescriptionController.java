@@ -2,13 +2,13 @@ package com.medora.controller;
 
 import com.medora.service.GeminiService;
 import com.medora.service.OCRService;
+import com.medora.service.PostProcessorService;
 import com.medora.service.PrescriptionParser;
+import com.medora.utils.PdfTextExtractor;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,26 +17,61 @@ import java.io.File;
 @RequestMapping("/api/prescription")
 public class PrescriptionController {
 
-    private static final String UPLOAD_DIR = "C:/uploads/prescriptions";
+    private static final String UPLOAD_DIR = "C:/uploads/prescriptions/";
 
     @Autowired
     private OCRService ocrService;
 
     @Autowired
-    private PrescriptionParser prescriptionParser;
-
-    @Autowired
     private GeminiService geminiService;
 
-    @PostMapping("/analyze")
-    public ResponseEntity<String> analyzePrescription(@RequestParam("file") MultipartFile file) {
-        try {
+    @Autowired
+    private PostProcessorService postProcessorService;
 
+    @Autowired
+    private PrescriptionParser prescriptionParser;
+
+    // === Upload PDF Prescription ===
+    @PostMapping("/analyze")
+    public ResponseEntity<String> uploadPrescription(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("username") String username) {
+        try {
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("File is empty");
             }
 
-            // Save the image to disk
+            // Extract text from PDF
+            String extractedText = PdfTextExtractor.extractText(file);
+            System.out.println(extractedText);
+
+            // Save file
+            String filePath = UPLOAD_DIR + file.getOriginalFilename();
+            file.transferTo(new File(filePath));
+
+            // Call AI
+            String aiResponse = geminiService.analyzePrescription(extractedText);
+            String summary = postProcessorService.cleanSummary(aiResponse);
+            //System.out.println("Summary: " + summary);
+
+            return ResponseEntity.ok(summary);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Upload failed: " + e.getMessage());
+        }
+    }
+
+    // === Upload Image-based Prescription (uses OCR) ===
+    @PostMapping("/image-analyze")
+    public ResponseEntity<String> uploadPrescriptionImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("username") String username) {
+        try {
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("File is empty");
+            }
+
             String filePath = UPLOAD_DIR + file.getOriginalFilename();
             File savedFile = new File(filePath);
             file.transferTo(savedFile);
@@ -44,30 +79,18 @@ public class PrescriptionController {
             // Step 1: Extract text from image
             String extractedText = ocrService.extractTextFromImage(savedFile);
 
-            System.out.println("=== OCR OUTPUT ===");
-            System.out.println(extractedText);
+//            System.out.println("=== OCR OUTPUT ===");
+//            System.out.println(extractedText);
 
-//            // Step 2: Parse prescription data (medicines, diagnosis, symptoms)
-//            PrescriptionData data = prescriptionParser.parse(extractedText);
-//
-//            System.out.println("=== PARSED OUTPUT ===");
-//            System.out.println("Medicines: " + data.getMedicines());
-//            System.out.println("Dosages: " + data.getDosages());
-//            System.out.println("Timings: " + data.getTimings());
+            // AI + Clean Summary
+            String aiResponse = geminiService.analyzePrescription(extractedText);
+            String summary = postProcessorService.cleanSummary(aiResponse);
 
-            // Step 3: Call AI API for summary
-//            String summary = geminiService.analyzePrescription(data);
-            String summary = "";
-
-            System.out.println("=== AI RESPONSE ===");
-            System.out.println(summary);
-
-            // Step 4: Return result
             return ResponseEntity.ok(summary);
-
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Error analyzing prescription: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Upload failed: " + e.getMessage());
         }
     }
 }

@@ -15,8 +15,8 @@ public class PrescriptionParser {
         String cleaned = cleanOCRText(text);
 
         PrescriptionData data = new PrescriptionData();
-        data.setDiagnosis(null);  // Since not extracting diagnosis now
-        data.setSymptoms(Collections.emptyList()); // Could enhance later
+        data.setDiagnosis(null);
+        data.setSymptoms(Collections.emptyList());
         data.setMedicines(extractMedicines(cleaned));
         data.setDosages(extractDosages(cleaned));
         data.setTimings(extractTimings(cleaned));
@@ -60,7 +60,10 @@ public class PrescriptionParser {
                 .replaceAll("TA8", "TAB")
                 .replaceAll("TAD", "TAB")
                 .replaceAll("C@P", "CAP")
-                .replaceAll("CA8", "CAP")
+                .replaceAll("TaB", "TAB")
+                .replaceAll("Tab", "TAB")
+                .replaceAll("Cap", "CAP")
+                .replaceAll("CAp", "CAP")
                 .replaceAll("[^A-Za-z0-9\\s:\\-\\.]", "")  // Remove weird chars
                 .replaceAll("\\s+", " ")                   // Normalize spaces
                 .toUpperCase()                             // Uniform casing
@@ -74,12 +77,12 @@ public class PrescriptionParser {
 
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i].toUpperCase();
-            if (token.equals("TAB") || token.equals("CAP") || token.equals("SYR") || token.equals("INJ")) {
+            if (token.equals("TAB") || token.equals("CAP") || token.equals("SYR") || token.equals("INJ") || token.equals("Tab") || token.equals("Inj")|| token.equals("Syp")) {
                 if (i + 1 < tokens.length) {
                     String medCandidate = tokens[i + 1].replaceAll("[^A-Za-z0-9]", "");
-                    String matched = fuzzyMatch(medCandidate);
-                    medicines.add(matched != null ? matched : medCandidate);
-                    System.out.println("Detected medicine: " + (matched != null ? matched : medCandidate));
+
+                    medicines.add(medCandidate);
+                    System.out.println("Detected medicine: " + (medCandidate));
                 }
             }
         }
@@ -110,43 +113,4 @@ public class PrescriptionParser {
         }
         return timings;
     }
-
-    private String capitalizeFirst(String word) {
-        if (word == null || word.isEmpty()) return word;
-        return word.substring(0, 1).toUpperCase() + word.substring(1).toLowerCase();
-    }
-    private static final List<String> MEDICINE_DICTIONARY = Arrays.asList(
-            "Sizodon", "Rivotril", "Ativan", "Sertraline", "Lorazepam", "Clonazepam", "Quetiapine"
-    );
-
-    private String fuzzyMatch(String raw) {
-        int threshold = 2;
-        String best = null;
-        int bestDist = Integer.MAX_VALUE;
-        for (String med : MEDICINE_DICTIONARY) {
-            int dist = levenshteinDistance(raw.toLowerCase(), med.toLowerCase());
-            if (dist < bestDist && dist <= threshold) {
-                bestDist = dist;
-                best = med;
-            }
-        }
-        return best;
-    }
-
-    private int levenshteinDistance(String a, String b) {
-        int[] costs = new int[b.length() + 1];
-        for (int j = 0; j < costs.length; j++) costs[j] = j;
-        for (int i = 1; i <= a.length(); i++) {
-            costs[0] = i;
-            int nw = i - 1;
-            for (int j = 1; j <= b.length(); j++) {
-                int cj = Math.min(1 + Math.min(costs[j], costs[j - 1]),
-                        a.charAt(i - 1) == b.charAt(j - 1) ? nw : nw + 1);
-                nw = costs[j];
-                costs[j] = cj;
-            }
-        }
-        return costs[b.length()];
-    }
-
 }

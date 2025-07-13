@@ -68,7 +68,7 @@ public class ReportController {
         }
     }
 
-    @PostMapping("/image-upload")
+    @PostMapping("/image-analyze")
     public ResponseEntity<String> uploadImageReport(
             @RequestParam("file") MultipartFile file,
             @RequestParam("username") String username) {

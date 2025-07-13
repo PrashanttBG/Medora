@@ -21,27 +21,47 @@ public class GeminiService {
         this.API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + API_KEY;
     }
 
-    public String buildPrescriptionPrompt(PrescriptionData data) {
+    public static String buildPrescriptionPrompt(String extractedText) {
+        return """
+                You are a medical assistant AI. Analyze the following prescription text and extract meaningful insights.
 
-        System.out.println("Gemini API URL: " + API_URL);
-        System.out.println("Gemini API KEY: " + API_KEY);
+                Your goal is to provide a structured response with the following information:
 
+                1. Patient Information
+                - Name (if available)
+                - Gender
+                - Age (if available)
+                - Date of Prescription (if available)
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Please analyze this prescription and generate:\n");
-        sb.append("- The likely diagnosis or health issue based on these medicines.\n");
-        sb.append("- A simple summary for the patient.\n");
-        sb.append("- List of medicines prescribed.\n");
-        sb.append("- Approximate price of each medicine (estimate or suggest).\n");
-        sb.append("- Cheaper or generic alternatives if possible.\n\n");
+                2. Probable Diagnosis or Health Issue
+                - Based on the prescribed medicines and any available symptoms or doctor notes, deduce the most likely diagnosis or health problem the patient is being treated for.
 
-        sb.append("Medicines:\n");
-        for (String med : data.getMedicines()) {
-            sb.append("- ").append(med).append("\n");
-        }
-        return sb.toString();
+                3. Medicines Prescribed
+                For each medicine listed, extract:
+                - Medicine Name
+                - Dosage (e.g., 1 tablet, 500mg, etc.)
+                - Frequency/Timing (e.g., twice a day after meals)
+                - Duration (e.g., 5 days, 1 week)
+                - Estimated Cost (in INR, approx.)
+                - Medicine Type (Antibiotic, Antacid, Painkiller, Vitamin, etc.)
+
+                Return this in a tabular format if possible.
+
+                4. Patient-Friendly Summary
+                Write a simple summary for the patient explaining:
+                - What their prescription suggests they might be suffering from
+                - A brief explanation of how and when to take the medicines
+                - Any basic precautions (e.g., avoid alcohol, take with food, etc.)
+                - Advice on follow-up or doctor consultation
+
+                - Special Remarks or Notes (if any)
+
+                Extracted Prescription Text:
+                """ + "\n" + extractedText + "\n\n"
+                + "Final output must be clean, structured, and easy to understand. If any data is not present, mark it as \"Not Available\".";
+
     }
-    public String analyzePrescription(PrescriptionData data) throws IOException {
+    public String analyzePrescription(String data) throws IOException {
         String prompt = buildPrescriptionPrompt(data);
 
         // Create content structure

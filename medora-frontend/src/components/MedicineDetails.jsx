@@ -118,7 +118,7 @@ export default function MedicineDetails() {
             <p className="text-center text-gray-600 mb-4">
               Drag and drop your image file here
             </p>
-            <label className="bg-purple-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-purple-600 transition">
+            <label className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-red-500 hover:to-yellow-500 text-white px-4 py-2 rounded cursor-pointer transition duration-300 shadow-md">
               Browse File
               <input
                 type="file"
@@ -149,7 +149,7 @@ export default function MedicineDetails() {
       <button
         onClick={handleSubmit}
         disabled={loading}
-        className="bg-white text-blue-600 px-6 py-3 rounded-lg hover:bg-gray-100 transition font-semibold mb-6"
+        className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:via-red-500 hover:to-yellow-500 text-white px-5 py-3 rounded-xl cursor-pointer transition duration-300 shadow-md"
       >
         {loading ? "Analyzing..." : "Analyze Medicine"}
       </button>
@@ -173,7 +173,7 @@ export default function MedicineDetails() {
 
       <button
         onClick={() => navigate('/dashboard')}
-        className="mt-8 bg-green-500 px-6 py-3 rounded-lg hover:bg-green-600 transition"
+        className="mt-8 bg-green-500 font-bold px-6 py-3 rounded-lg hover:bg-green-600 transition"
       >
         Back to Dashboard
       </button>
