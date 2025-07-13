@@ -21,7 +21,7 @@ public class UserPrincipal extends User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList(); // or use roles if you have
+        return Collections.emptyList();
     }
 
     @Override
