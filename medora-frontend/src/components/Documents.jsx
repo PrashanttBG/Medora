@@ -1,4 +1,3 @@
-// DocumentsPage.jsx - With preview popup and upload success toast
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Download, Trash2, FileText, Eye } from 'lucide-react';
