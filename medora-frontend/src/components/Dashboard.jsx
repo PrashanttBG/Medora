@@ -1,4 +1,3 @@
-// src/pages/Dashboard.jsx
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -23,7 +22,6 @@ export default function Dashboard() {
         Documents
       </motion.button>
       
-      {/* Animated Medora Title */}
       <motion.h1
         className="text-5xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-500 to-red-400 bg-clip-text text-transparent mb-20 tracking-wide"
         initial={{ y: -100, opacity: 0 }}
