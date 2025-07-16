@@ -58,9 +58,6 @@ export default function Dashboard() {
           onClick={ () => navigate('/prescription-analysis')}
         >
           Prescription Analysis
-          {/* <span className="absolute top-2 right-2 text-xs text-yellow-300 bg-black px-1 rounded">
-            Coming Soon
-          </span> */}
         </motion.button>
 
       </div>
