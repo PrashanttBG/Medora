@@ -90,43 +90,5 @@ public class GPTService {
     private String jsonEscape(String text) {
         return "\"" + text.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"";
     }
-
-
-//    public String analyzeReport(String extractedText) throws IOException {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setBearerAuth(API_KEY);
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//        Map<String, Object> message = Map.of(
-//                "role", "user",
-//                "content", "Extract important test outcomes from this medical report and summarize it in layman terms. Also, suggest which specialist to consult:\n\n" + extractedText
-//        );
-//
-//        Map<String, Object> requestBody = Map.of(
-//                "model", "gpt-3.5-turbo",
-//                "messages", List.of(message),
-//                "temperature", 0.7
-//        );
-//
-//        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
-//        RestTemplate restTemplate = new RestTemplate();
-//        ResponseEntity<Map> response = restTemplate.postForEntity(API_URL, entity, Map.class);
-//
-//        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.getBody().get("choices");
-//        Map<String, Object> messageContent = (Map<String, Object>) choices.get(0).get("message");
-//
-//        return (String) messageContent.get("content");
-//    }
-//
-//    public String extractSpecialist(String aiResponse) {
-//        Pattern pattern = Pattern.compile("(?i)(?:consult|see|visit) (?:a|an) ([A-Z][a-zA-Z]+)");
-//        Matcher matcher = pattern.matcher(aiResponse);
-//
-//        if (matcher.find()) {
-//            return matcher.group(1); // Group 1 contains the specialist name
-//        }
-//
-//        return "General Physician";
-//    }
 }
 
